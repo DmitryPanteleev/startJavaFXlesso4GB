@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<?import javafx.scene.shape.Circle?>
+<?scenebuilder-stylesheet /css/Styles.css?>
+
+
+<VBox fx:id="scene2" alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
+      fx:controller="sample.Controller">
+    <stylesheets>
+        <URL value="@/css/Styles.css"/>
+    </stylesheets>
+    <!--<HBox>-->
+        <TextArea fx:id="textArea" editable="false" promptText=" Смотри тут" wrapText="true" VBox.vgrow="ALWAYS"/>
+    <!--</HBox>-->
+    <HBox >
+        <TextField fx:id="textField"  onAction="#sendMsg" promptText="      пиши тут" HBox.hgrow="ALWAYS"/>
+
+        <Button fx:id="btn1" onAction="#sendMsg" text="Send"/>
+    </HBox>
+
+    <HBox alignment="TOP_CENTER">
+        <Button fx:id="btnClose" onAction="#Close" text="Close" />
+        <!--<TextField fx:id="loginField" onAction="#sendLogin" promptText="   Your Login" focusTraversable="false"-->
+                   <!--HBox.hgrow="ALWAYS"/>-->
+        <!--<Button fx:id="btnLogin" onAction="#sendLogin" text="LogIN"/>-->
+    </HBox>
+    <!--<DialogPane fx:id="DialogPane"></DialogPane>-->
+</VBox>
+
+        <!--<VBox id="scene" alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="sample.Controller">-->
+
+        <!--</VBox>-->
