@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,20 +7,21 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 
 public class Controller implements Initializable {
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        textArea.setFocusTraversable(false);
-    }
+    final String IP_ADRESS = "localhost";
+    final int PORT = 8189;
+    Socket socket;
+    DataOutputStream outputStream;
+    DataInputStream inputStream;
 
     @FXML
     TextArea textArea;
@@ -44,10 +44,32 @@ public class Controller implements Initializable {
     Button btnLogin;
 
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        textArea.setFocusTraversable(false);
+        try {
+            socket = new Socket(IP_ADRESS, PORT);
+            while (true) {
+                inputStream = new DataInputStream(socket.getInputStream());
+                outputStream = new DataOutputStream(socket.getOutputStream());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 
     public void sendMsg() {
         if (textField.getText() != null && !textField.getText().equals("") && login != null) {
-            textArea.appendText(login + "|" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:SS")) + "|>>  " + textField.getText() + "\n");
+
+//            textArea.appendText(login + "|" + LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:SS")) + "|>>  " + textField.getText() + "\n");
 
             textField.clear();
             textField.requestFocus();
@@ -66,7 +88,6 @@ public class Controller implements Initializable {
         System.exit(0);
 
     }
-
 
 
 //    public void sendLogin(ActionEvent actionEvent) {
