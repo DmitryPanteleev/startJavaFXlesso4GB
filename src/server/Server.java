@@ -1,60 +1,36 @@
 package server;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
+import java.sql.SQLException;
 import java.util.Vector;
 
 public class Server {
 
     private Vector<ClientHandler> clients;
 
-    public static void StartServer() {
+    public Vector<ClientHandler> getClients() {
+        return clients;
+    }
+
+    public void StartServer() throws SQLException {
+        clients = new Vector<ClientHandler>();
 
         ServerSocket serverSocket = null;
         Socket socket = null;
 
         try {
+//            AuthService.connect();
+//            String name = AuthService.getNickByLoginAndPass("login1","pass1");
             serverSocket = new ServerSocket(8189);
             System.out.println("server start, waiting connection...");
+            while (true) {
+                socket = serverSocket.accept();
+                System.out.println("Connection");
+//                subscribe(new ClientHandler(this, socket));
+            }
 
-            socket = serverSocket.accept();
-            System.out.println("Connection");
-
-            final DataInputStream inputStream = new DataInputStream(socket.getInputStream());
-            final DataOutputStream outputStream = new DataOutputStream(socket.getOutputStream());
-            final Scanner scanner = new Scanner(System.in);
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (true) {
-                            String str = inputStream.readUTF();
-                            if (str.equals("/end")){
-                                outputStream.writeUTF("/end");
-                                break;
-                            }
-                            System.out.println("Client: " + str);
-                            outputStream.writeUTF(str);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-//            while (true) {
-//                Scanner scanner = new Scanner(System.in);
-//                String str = scanner.nextLine();
-//                if (str.equals("end")) break;
-//                outputStream.writeUTF("server: " + str);
-//                outputStream.flush();
-////                outputStream.writeUTF(inputStream.readUTF() + "\n");
-//
-//            }
 
         } catch (IOException e) {
             System.out.println("Exception server initializer");
@@ -73,4 +49,30 @@ public class Server {
 
         }
     }
+
+    public void subscribe(ClientHandler client) {
+        clients.add(client);
+    }
+
+    public void unSubscribe(ClientHandler client) {
+        clients.remove(client);
+    }
+
+    public void broadcastMsg(String msg) {
+        checkValidSocket();
+        for (ClientHandler c :
+                clients) {
+            c.sendMessage(msg);
+        }
+    }
+
+    public void checkValidSocket() {
+        for (ClientHandler c :
+                clients) {
+            if (c.getSocket().isClosed()) {
+                clients.remove(c);
+            }
+        }
+    }
+
 }

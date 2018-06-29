@@ -11,29 +11,34 @@
 <?scenebuilder-stylesheet /css/Styles.css?>
 
 
+<?import javafx.scene.control.PasswordField?>
 <VBox fx:id="scene2" alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121"
       fx:controller="sample.Controller">
     <stylesheets>
         <URL value="@/css/Styles.css"/>
     </stylesheets>
     <!--<HBox>-->
-        <TextArea fx:id="textArea" editable="false" promptText=" Смотри тут" wrapText="true" VBox.vgrow="ALWAYS"/>
+    <TextArea fx:id="textArea" editable="false" promptText=" Смотри тут" wrapText="true" VBox.vgrow="ALWAYS"/>
     <!--</HBox>-->
-    <HBox >
-        <TextField fx:id="textField"  onAction="#sendMsg" promptText="      пиши тут" HBox.hgrow="ALWAYS"/>
+
+    <!--<HBox fx:id="upperPanel" alignment="CENTER">-->
+        <VBox fx:id="upperPanel">
+            <TextField HBox.hgrow="ALWAYS" promptText="Login" fx:id="loginField" />
+            <PasswordField promptText="Password" fx:id="passwordField" onAction="#tryToAuth"/>
+
+        </VBox>
+        <Button VBox.vgrow="ALWAYS" alignment="BASELINE_RIGHT" text="Authorized" onAction="#tryToAuth"
+                textAlignment="CENTER"/>
+    <!--</HBox>-->
+    <HBox fx:id="buttonPanel" managed="false" visible="false">
+        <TextField fx:id="textField" onAction="#sendMsg" promptText="      пиши тут" HBox.hgrow="ALWAYS"/>
 
         <Button fx:id="btn1" onAction="#sendMsg" text="Send"/>
     </HBox>
 
     <HBox alignment="TOP_CENTER">
-        <Button fx:id="btnClose" onAction="#Close" text="Close" />
-        <!--<TextField fx:id="loginField" onAction="#sendLogin" promptText="   Your Login" focusTraversable="false"-->
-                   <!--HBox.hgrow="ALWAYS"/>-->
-        <!--<Button fx:id="btnLogin" onAction="#sendLogin" text="LogIN"/>-->
+        <Button fx:id="btnClose" onAction="#Close" text="Close"/>
+
     </HBox>
-    <!--<DialogPane fx:id="DialogPane"></DialogPane>-->
+
 </VBox>
-
-        <!--<VBox id="scene" alignment="center" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.121" fx:controller="sample.Controller">-->
-
-        <!--</VBox>-->

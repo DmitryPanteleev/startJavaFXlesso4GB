@@ -29,7 +29,7 @@ public class Main extends Application {
 
     private void welcome() throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("welcome.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
 
         Scene sceneWelcome = new Scene(root, 300, 400);
 

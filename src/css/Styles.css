@@ -63,6 +63,10 @@
 
 #loginField {
 
-    -fx-font-size: 16px;
+    -fx-font-size: 15px;
 
+}
+
+#passwordField{
+    -fx-font-size: 15px;
 }
