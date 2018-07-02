@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class Server {
@@ -21,14 +22,14 @@ public class Server {
         Socket socket = null;
 
         try {
-//            AuthService.connect();
+            AuthService.connect();
 //            String name = AuthService.getNickByLoginAndPass("login1","pass1");
             serverSocket = new ServerSocket(8189);
             System.out.println("server start, waiting connection...");
             while (true) {
                 socket = serverSocket.accept();
                 System.out.println("Connection");
-//                subscribe(new ClientHandler(this, socket));
+                new ClientHandler(this, socket);
             }
 
 
@@ -46,23 +47,29 @@ public class Server {
                 e.printStackTrace();
             }
 
+            AuthService.disconnect();
 
         }
     }
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        broadcastClientList();
     }
 
     public void unSubscribe(ClientHandler client) {
         clients.remove(client);
+        broadcastClientList();
     }
 
-    public void broadcastMsg(String msg) {
+    public void broadcastMsg(String nick, String msg) {
         checkValidSocket();
+
         for (ClientHandler c :
                 clients) {
-            c.sendMessage(msg);
+            if (!BlackList.checkBL(nick, c.getNick())) {
+                c.sendMessage(nick + msg);
+            }
         }
     }
 
@@ -75,4 +82,48 @@ public class Server {
         }
     }
 
+    public boolean checkNick(String nick) {
+        for (ClientHandler client :
+                clients) {
+            if (client.getNick().equals(nick)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void broadcastClientList() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("/clientList ");
+        for (ClientHandler c :
+                clients) {
+            sb.append(c.getNick() + " ");
+        }
+        String out = sb.toString();
+        for (ClientHandler c :
+                clients) {
+            c.sendMessage(out);
+        }
+    }
+
+    public void sendPersonalMSG(ClientHandler from, String nickTo, String msg) {
+        for (ClientHandler c :
+                clients) {
+            if (c.getNick().equals(nickTo)) {
+                c.sendMessage("from " + from.getNick() + ": " + msg);
+                from.sendMessage("to " + nickTo + ": " + msg);
+                return;
+            }
+        }
+        from.sendMessage("NoNick");
+    }
+
+    public boolean checkBlackList(String wNick, String BNick) {
+        ArrayList<String> blist = new ArrayList();
+        if (BlackList.getBL(wNick) != null) {
+            blist = BlackList.getBL(wNick);
+        }
+        if (blist.contains(BNick)) return true;
+        else return false;
+    }
 }

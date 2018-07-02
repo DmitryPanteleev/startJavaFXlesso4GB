@@ -18,20 +18,29 @@ public class AuthService {
     }
 
     public static String getNickByLoginAndPass(String login, String pass) {
-        String sql = String.format("SELECT nickname FROM main\n"
-                + "WHERE login = '%s'\n" +
-                "and password = '%s'", login, pass);
 
-
+        String sql = String.format("SELECT nickname FROM main "
+                + "WHERE login = '%s' and password = '%s' ", login, pass);
+        System.out.println(sql);
         try {
             ResultSet rs = stmt.executeQuery(sql);
             if (rs.next()) {
-//                System.out.println(rs.getString(1));
+                System.out.println(rs.getString(1));
                 return rs.getString(1);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void disconnect() {
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 }
