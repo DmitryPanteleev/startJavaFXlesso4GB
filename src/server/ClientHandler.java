@@ -67,15 +67,14 @@ public class ClientHandler {
                             }
                             if (string.startsWith("/blacklist")) {
                                 String[] token = string.split(" ");
-                                BlackList.addBL(this.getNick(),token[1]);
-//                                blackList.add(token[1]);
+                                BlackList.addBL(getNick() ,token[1]);
+                                System.out.println(getNick());
                                 sendMessage(token[1] + " добавлен в чёрный список");
                             }
                             if (string.equals("/unAuth")){
                                 server.unSubscribe(this);
-                                this.nick = null;
+                                nick = null;
                             }
-
                         } else {
                             server.broadcastMsg(nick , " |" +
                                     LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:SS")) +

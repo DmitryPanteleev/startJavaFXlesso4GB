@@ -19,7 +19,7 @@
     <HBox VBox.vgrow="ALWAYS">
         <TextArea fx:id="textArea" editable="false" HBox.hgrow="ALWAYS" promptText=" Смотри тут"
                   wrapText="true" VBox.vgrow="ALWAYS"/>
-        <ListView fx:id="clientList" managed="false" visible="false"></ListView>
+        <ListView fx:id="clientList" managed="false" visible="false" onMouseClicked="#newPrivatDialog" onMousePressed="#newPrivatDialog"/>
     </HBox>
     <HBox fx:id="upperPanel" prefHeight="100.0">
         <VBox focusTraversable="true" HBox.hgrow="ALWAYS">

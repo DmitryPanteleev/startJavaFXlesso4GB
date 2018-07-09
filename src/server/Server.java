@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 public class Server {
@@ -23,6 +24,7 @@ public class Server {
 
         try {
             AuthService.connect();
+            BlackList.blackListConnect();
 //            String name = AuthService.getNickByLoginAndPass("login1","pass1");
             serverSocket = new ServerSocket(8189);
             System.out.println("server start, waiting connection...");
@@ -67,7 +69,7 @@ public class Server {
 
         for (ClientHandler c :
                 clients) {
-            if (!BlackList.checkBL(nick, c.getNick())) {
+            if (!checkBlackList(nick, c.getNick())) {
                 c.sendMessage(nick + msg);
             }
         }
@@ -119,11 +121,16 @@ public class Server {
     }
 
     public boolean checkBlackList(String wNick, String BNick) {
-        ArrayList<String> blist = new ArrayList();
-        if (BlackList.getBL(wNick) != null) {
-            blist = BlackList.getBL(wNick);
+        try {
+            if (!BlackList.getBL(wNick).isEmpty()) {
+                if (AuthService.getBL(wNick).contains(BNick)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else return false;
+        } catch (NullPointerException npe) {
+            return false;
         }
-        if (blist.contains(BNick)) return true;
-        else return false;
     }
 }

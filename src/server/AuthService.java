@@ -5,7 +5,23 @@ import java.sql.*;
 public class AuthService {
 
     private static Connection connection;
+
     private static Statement stmt;
+
+    public static String getResultSet(String sql) {
+
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
+            if (rs.next()) {
+                System.out.println(rs.getString(1));
+                return rs.getString(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 
     public static void connect() throws SQLException {
         try {
@@ -22,16 +38,9 @@ public class AuthService {
         String sql = String.format("SELECT nickname FROM main "
                 + "WHERE login = '%s' and password = '%s' ", login, pass);
         System.out.println(sql);
-        try {
-            ResultSet rs = stmt.executeQuery(sql);
-            if (rs.next()) {
-                System.out.println(rs.getString(1));
-                return rs.getString(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return getResultSet(sql);
+
     }
 
     public static void disconnect() {
@@ -43,4 +52,15 @@ public class AuthService {
         }
 
     }
+
+    public static String getBL(String wNick) {
+        String sql = String.format("SELECT BN FROM black_List "
+                + "WHERE NN = '%s'", wNick);
+
+        return getResultSet(sql);
+    }
+
+
+
+
 }

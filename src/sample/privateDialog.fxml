@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="sample.Controller"
+            prefHeight="400.0" prefWidth="600.0">
+    <VBox>
+        <TextArea fx:id="privatTextArea" editable="false" HBox.hgrow="ALWAYS" promptText=" Смотри тут"/>
+
+        <HBox alignment="CENTER">
+            <TextField fx:id="privateTextField" HBox.hgrow="ALWAYS" alignment="BASELINE_LEFT" focusTraversable="false" onAction="#sendPrivateMsg"
+                       prefHeight="29.0"  promptText="      пиши тут"/>
+            <Button fx:id="btnSendPrivatMsg" alignment="CENTER" HBox.hgrow="ALWAYS" contentDisplay="BOTTOM" onAction="#sendPrivateMsg" prefHeight="29.0"
+                    prefWidth="125.0" text="SEND"/>
+        </HBox>
+    </VBox>
+
+</AnchorPane>
+

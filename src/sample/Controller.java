@@ -3,8 +3,12 @@ package sample;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import server.Server;
 
 import java.io.DataInputStream;
@@ -35,7 +39,6 @@ public class Controller {
     Button btnLogin;
     @FXML
     ListView clientList;
-
     //    String login = Welcome.login;
     @FXML
     HBox buttonPanel;
@@ -45,7 +48,16 @@ public class Controller {
     TextField loginField;
     @FXML
     PasswordField passwordField;
+    @FXML
+    TextArea privatTextArea;
+    @FXML
+    TextField privateTextField;
+
     private boolean isAuthorized;
+
+    public Socket getSocket() {
+        return socket;
+    }
 
     public void setAuthorized(boolean isAuthorized) {
         this.isAuthorized = isAuthorized;
@@ -69,8 +81,8 @@ public class Controller {
 
 
     public void connect() {
-//        textArea.setFocusTraversable(false);
-//        loginField.setFocusTraversable(true);
+        textArea.setFocusTraversable(false);
+        loginField.setFocusTraversable(true);
         try {
             socket = new Socket(IP_ADRESS, PORT);
 //            while (true) {
@@ -114,7 +126,6 @@ public class Controller {
                                             }
                                         }
                                     });
-
                                 }
                             } else {
                                 textArea.appendText(string + "\n");
@@ -167,8 +178,9 @@ public class Controller {
     public void Close(ActionEvent actionEvent) {
 
         try {
-//            if (server.getClients().contains(this)) {
-            outputStream.writeUTF("/end");
+            if (getSocket() != null) {
+                outputStream.writeUTF("/end");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -213,8 +225,8 @@ public class Controller {
                     System.out.println("/unAuth");
                     outputStream.writeUTF("/unAuth");
 //                    inputStream.close();
-                    outputStream.close();
-                    socket.close();
+//                    outputStream.close();
+//                    socket.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -224,5 +236,40 @@ public class Controller {
             }
         }
 
+    }
+
+    public void newPrivatDialog() {
+
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("privateDialog.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Stage stage = new Stage();
+
+        Scene scene = new Scene(root, 300, 400);
+
+        stage.setScene(scene);
+        stage.show();
+
+    }
+
+    public void sendPrivateMsg() {
+        System.out.println(clientList.getSelectionModel().getSelectedItems());
+        if (textField.getText() != null && !textField.getText().equals("")) {
+            try {
+                outputStream.writeUTF("/W" + clientList.getSelectionModel().getSelectedItems() + textField.getText());
+                start = LocalTime.now().toSecondOfDay();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            textField.clear();
+            textField.requestFocus();
+        } else
+            textField.setPromptText(" Привет, напиши что-нибудь");
+        textField.requestFocus();
     }
 }
