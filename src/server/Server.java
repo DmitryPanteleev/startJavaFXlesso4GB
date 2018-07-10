@@ -123,7 +123,7 @@ public class Server {
     public boolean checkBlackList(String wNick, String BNick) {
         try {
             if (!BlackList.getBL(wNick).isEmpty()) {
-                if (AuthService.getBL(wNick).contains(BNick)) {
+                if (BlackList.getBL(wNick).contains(BNick)) {
                     return true;
                 } else {
                     return false;

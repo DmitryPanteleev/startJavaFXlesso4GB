@@ -53,14 +53,4 @@ public class AuthService {
 
     }
 
-    public static String getBL(String wNick) {
-        String sql = String.format("SELECT BN FROM black_List "
-                + "WHERE NN = '%s'", wNick);
-
-        return getResultSet(sql);
-    }
-
-
-
-
 }
