@@ -133,4 +133,17 @@ public class Server {
             return false;
         }
     }
+
+    public void sendPrivateMsg(ClientHandler from, String nickTo, String msg){
+        for (ClientHandler c :
+                clients) {
+            if (c.getNick().equals(nickTo)) {
+                c.sendMessage("/privateMSG " + "from " + from.getNick() + ": " + msg);
+                from.sendMessage("/privateMSG " + "to " + nickTo + ": " + msg);
+                return;
+            }
+        }
+
+    }
+
 }

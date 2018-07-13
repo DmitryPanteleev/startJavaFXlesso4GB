@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.Vector;
+import java.util.*;
 
 public class ClientHandler {
 
@@ -20,8 +17,7 @@ public class ClientHandler {
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private String nick;
-    BlackList bl;
-//    private ArrayList<String> blackList;
+    private String privareDialogNick;
 
     public ClientHandler(Server server, Socket socket) {
         try {
@@ -44,8 +40,9 @@ public class ClientHandler {
                             if (newNick != null) {
                                 if (!server.checkNick(newNick)) {
 
-                                    sendMessage("/authOk");
                                     nick = newNick;
+                                    sendMessage("/authOk " + nick);
+
                                     System.out.println(nick);
                                     server.subscribe(this);
                                     break;
@@ -67,16 +64,28 @@ public class ClientHandler {
                             }
                             if (string.startsWith("/blacklist")) {
                                 String[] token = string.split(" ");
-                                BlackList.addBL(getNick() ,token[1]);
+                                BlackList.addBL(getNick(), token[1]);
                                 System.out.println(getNick());
                                 sendMessage(token[1] + " добавлен в чёрный список");
                             }
-                            if (string.equals("/unAuth")){
+                            if (string.equals("/unAuth")) {
                                 server.unSubscribe(this);
                                 nick = null;
                             }
+                            if (string.startsWith("/private ")) {
+                                String[] tokens = string.split(" ");
+                                privareDialogNick = tokens[1];
+                            }
+                            if (string.startsWith("/privat")) {
+                                String[] token = string.split(" ", 2);
+                                server.sendPrivateMsg(this, privareDialogNick, token[2]);
+                            }
+                            if (string.startsWith("/kill")){
+                                String[] tokens = string.split(" ");
+                                server.sendPersonalMSG(this, tokens[1], "/CLOSE");
+                            }
                         } else {
-                            server.broadcastMsg(nick , " |" +
+                            server.broadcastMsg(nick, " |" +
                                     LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:SS")) +
                                     "|>  " + string);
                             System.out.println("Client: " + string);
@@ -112,12 +121,9 @@ public class ClientHandler {
         }
     }
 
-
-
     public Socket getSocket() {
         return socket;
     }
-
 
 
     public String getNick() {
@@ -126,11 +132,14 @@ public class ClientHandler {
 
     public void sendMessage(String msg) {
         try {
-
             outputStream.writeUTF(msg);
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendPrivateMsg(String msg) {
+
     }
 
 }

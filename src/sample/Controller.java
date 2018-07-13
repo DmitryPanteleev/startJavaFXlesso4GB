@@ -52,6 +52,8 @@ public class Controller {
     TextArea privatTextArea;
     @FXML
     TextField privateTextField;
+    @FXML
+    TextArea nickArea;
 
     private boolean isAuthorized;
 
@@ -99,6 +101,8 @@ public class Controller {
                             if (string.startsWith("/authOk")) {
                                 System.out.println("new authOk");
                                 setAuthorized(true);
+                                String[] tokens = string.split(" ");
+                                nickArea.setText(tokens[1]);
                                 new Thread(() -> unLoginTwoMin()).start();
                                 break;
                             } else {
@@ -127,8 +131,17 @@ public class Controller {
                                         }
                                     });
                                 }
+
                             } else {
-                                textArea.appendText(string + "\n");
+                                if (string.startsWith("from ")) {
+                                    String[] tokens = string.split(": ");
+                                    System.out.println(tokens[1]);
+                                    if (tokens[1].equals("/CLOSE")) {
+                                        closee();
+                                    }else {
+                                        textArea.appendText(string + "\n");
+                                    }
+                                }
                             }
                         }
                     } catch (IOException e) {
@@ -175,7 +188,21 @@ public class Controller {
         textField.requestFocus();
     }
 
-    public void Close(ActionEvent actionEvent) {
+    public void close(ActionEvent actionEvent) {
+
+        try {
+            if (getSocket() != null) {
+                outputStream.writeUTF("/end");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.exit(101);
+
+    }
+
+    public void closee() {
 
         try {
             if (getSocket() != null) {
@@ -231,6 +258,7 @@ public class Controller {
                     e.printStackTrace();
                 }
                 setAuthorized(false);
+                nickArea.clear();
                 start = LocalTime.now().toSecondOfDay();
                 break;
             }
@@ -239,7 +267,10 @@ public class Controller {
     }
 
     public void newPrivatDialog() {
-
+        System.out.println("brrr");
+        System.out.println(clientList.getFocusModel().getFocusedItem());
+//        System.out.println(this);
+//        System.out.println();
         Parent root = null;
         try {
             root = FXMLLoader.load(getClass().getResource("privateDialog.fxml"));
@@ -253,23 +284,14 @@ public class Controller {
 
         stage.setScene(scene);
         stage.show();
+        try {
+            outputStream.writeUTF("/private " + clientList.getFocusModel().getFocusedItem());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
-    public void sendPrivateMsg() {
-        System.out.println(clientList.getSelectionModel().getSelectedItems());
-        if (textField.getText() != null && !textField.getText().equals("")) {
-            try {
-                outputStream.writeUTF("/W" + clientList.getSelectionModel().getSelectedItems() + textField.getText());
-                start = LocalTime.now().toSecondOfDay();
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            textField.clear();
-            textField.requestFocus();
-        } else
-            textField.setPromptText(" Привет, напиши что-нибудь");
-        textField.requestFocus();
-    }
 }

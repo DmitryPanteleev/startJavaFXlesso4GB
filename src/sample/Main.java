@@ -5,27 +5,28 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import server.ClientHandler;
 
 import java.io.IOException;
 
 public class Main extends Application {
 
-
+    ClientHandler clientHandler;
     private Stage primaryStage;
+
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Single chat");
+        this.primaryStage.setTitle("chat");
 
         welcome();
 
 
-
-
     }
-
-
 
     private void welcome() throws IOException {
 
@@ -35,12 +36,8 @@ public class Main extends Application {
 
         primaryStage.setScene(sceneWelcome);
         //  scene.getStylesheets().add((getClass().getResource("/css/Styles.css")).toExternalForm());
-        primaryStage.show();
 
-    }
+            primaryStage.show();
 
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

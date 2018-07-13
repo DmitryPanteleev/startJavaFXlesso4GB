@@ -16,7 +16,10 @@
     <stylesheets>
         <URL value="@/css/Styles.css"/>
     </stylesheets>
+    <TextArea fx:id="nickArea" editable="false" HBox.hgrow="ALWAYS" promptText="nick"
+                            wrapText="true" maxHeight="50"/>
     <HBox VBox.vgrow="ALWAYS">
+
         <TextArea fx:id="textArea" editable="false" HBox.hgrow="ALWAYS" promptText=" Смотри тут"
                   wrapText="true" VBox.vgrow="ALWAYS"/>
         <ListView fx:id="clientList" managed="false" visible="false" onMouseClicked="#newPrivatDialog" onMousePressed="#newPrivatDialog"/>
@@ -36,6 +39,6 @@
                 prefWidth="125.0" text="SEND"/>
     </HBox>
     <HBox alignment="TOP_CENTER">
-        <Button fx:id="btnClose" onAction="#Close" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" text="Close"/>
+        <Button fx:id="btnClose" onAction="#close" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" text="Close"/>
     </HBox>
 </VBox>
